@@ -24,7 +24,7 @@ const AdminDashboard = () => {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/tickets"
+        "https://echo-support-backend.onrender.com/api/tickets"
       );
 
       setTickets(res.data.tickets);
@@ -58,7 +58,7 @@ const AdminDashboard = () => {
 
       await axios.put(
 
-        `http://localhost:5000/api/tickets/${id}`,
+        `https://echo-support-backend.onrender.com/api/tickets/${id}`,
 
         { status }
       );
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/tickets/${id}`
+        `https://echo-support-backend.onrender.com/api/tickets/${id}`
       );
 
       fetchTickets();

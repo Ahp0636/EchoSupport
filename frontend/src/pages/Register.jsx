@@ -81,7 +81,7 @@ const Register = () => {
 
       const res = await axios.post(
 
-        "http://localhost:5000/api/auth/register",
+        "https://echo-support-backend.onrender.com/api/auth/register",
 
         {
           name: formData.name,

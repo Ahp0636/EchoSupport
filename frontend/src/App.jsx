@@ -6,23 +6,14 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
-
 import Login from "./pages/Login";
-
 import Register from "./pages/Register";
-
-import CreateTicket from "./pages/CreateTicket";
-
 import UserDashboard from "./pages/UserDashboard";
-
 import AdminDashboard from "./pages/AdminDashboard";
-
+import CreateTicket from "./pages/CreateTicket";
 import MyTickets from "./pages/MyTickets";
-
 import Profile from "./pages/Profile";
-
 import AIChat from "./pages/AIChat";
-
 
 const ProtectedRoute = ({
   children,
@@ -33,14 +24,11 @@ const ProtectedRoute = ({
 
   if (!token) {
 
-    return (
-      <Navigate to="/login" />
-    );
+    return <Navigate to="/login" />;
   }
 
   return children;
 };
-
 
 const AdminRoute = ({
   children,
@@ -62,7 +50,6 @@ const AdminRoute = ({
 
   return children;
 };
-
 
 function App() {
 
@@ -88,23 +75,19 @@ function App() {
         />
 
         <Route
-          path="/create-ticket"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-
-              <CreateTicket />
-
+              <UserDashboard />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/dashboard"
+          path="/create-ticket"
           element={
             <ProtectedRoute>
-
-              <UserDashboard />
-
+              <CreateTicket />
             </ProtectedRoute>
           }
         />
@@ -113,9 +96,7 @@ function App() {
           path="/my-tickets"
           element={
             <ProtectedRoute>
-
               <MyTickets />
-
             </ProtectedRoute>
           }
         />
@@ -124,9 +105,7 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute>
-
               <Profile />
-
             </ProtectedRoute>
           }
         />
@@ -135,9 +114,7 @@ function App() {
           path="/ai-chat"
           element={
             <ProtectedRoute>
-
               <AIChat />
-
             </ProtectedRoute>
           }
         />
@@ -146,9 +123,7 @@ function App() {
           path="/admin"
           element={
             <AdminRoute>
-
               <AdminDashboard />
-
             </AdminRoute>
           }
         />

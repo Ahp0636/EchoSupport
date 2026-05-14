@@ -12,7 +12,7 @@ const MyTickets = () => {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/tickets"
+        "https://echo-support-backend.onrender.com/api/tickets"
       );
 
       setTickets(res.data.tickets);

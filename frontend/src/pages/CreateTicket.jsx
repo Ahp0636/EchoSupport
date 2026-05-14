@@ -25,7 +25,7 @@ const CreateTicket = () => {
     try {
 
       const response = await axios.post(
-        "http://localhost:5000/api/tickets/create",
+        "https://echo-support-backend.onrender.com/api/tickets/create",
         formData
       );
 
