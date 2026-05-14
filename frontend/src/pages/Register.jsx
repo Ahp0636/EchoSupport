@@ -1,199 +1,228 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  Link,
+} from "react-router-dom";
 
-function Register() {
+const Register = () => {
 
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] =
+    useState(false);
 
   const [formData, setFormData] =
     useState({
       name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     });
 
   const handleChange = (e) => {
 
     setFormData({
       ...formData,
-      [e.target.name]:
-        e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{6,}$/;
+
+    if (
+      formData.name.trim().length < 3
+    ) {
+
+      return alert(
+        "Name must be at least 3 characters"
+      );
+    }
+
+    if (
+      !emailRegex.test(formData.email)
+    ) {
+
+      return alert(
+        "Invalid email format"
+      );
+    }
+
+    if (
+      !passwordRegex.test(
+        formData.password
+      )
+    ) {
+
+      return alert(
+        "Password must contain minimum 6 characters, 1 uppercase letter, 1 number and 1 special character"
+      );
+    }
+
+    if (
+      formData.password !==
+      formData.confirmPassword
+    ) {
+
+      return alert(
+        "Passwords do not match"
+      );
+    }
+
     try {
 
-      await axios.post(
-        "https://echosupport.onrender.com/api/auth/register",
-        formData
+      const res = await axios.post(
+
+        "http://localhost:5000/api/auth/register",
+
+        {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }
       );
 
-      alert("Registration Successful");
+      localStorage.setItem(
+        "token",
+        res.data.token
+      );
 
-      navigate("/login");
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user)
+      );
+
+      alert(
+        "Registration Successful 🎉"
+      );
+
+      navigate("/dashboard");
 
     } catch (error) {
 
       console.log(error);
 
-      alert(error.response?.data?.message || "Registration Failed");
+      alert(
+        error.response?.data?.message ||
+        "Registration Failed"
+      );
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
 
-        display: "flex",
-
-        justifyContent: "center",
-
-        alignItems: "center",
-
-        background:
-          "linear-gradient(to right top, #020617, #0f172a, #1e1b4b)",
-
-        fontFamily: "Arial",
-      }}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950 flex justify-center items-center text-white px-4">
 
       <form
-        onSubmit={handleRegister}
-
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-
-          background:
-            "rgba(255,255,255,0.08)",
-
-          backdropFilter: "blur(12px)",
-
-          padding: "40px",
-
-          borderRadius: "28px",
-
-          border:
-            "1px solid rgba(255,255,255,0.08)",
-
-          boxShadow:
-            "0 0 40px rgba(0,0,0,0.4)",
-        }}
+        onSubmit={handleSubmit}
+        className="bg-white/10 backdrop-blur-lg border border-white/20 p-10 rounded-3xl shadow-2xl w-full max-w-md flex flex-col gap-5"
       >
 
-        <h1
-          style={{
-            textAlign: "center",
-
-            color: "white",
-
-            marginBottom: "35px",
-
-            fontSize: "42px",
-
-            fontWeight: "bold",
-
-            letterSpacing: "1px",
-          }}
-        >
-          Register
+        <h1 className="text-4xl font-bold text-center">
+          Create Account 🚀
         </h1>
 
         <input
           type="text"
           name="name"
           placeholder="Full Name"
-
+          className="p-4 rounded-xl bg-black/30 border border-gray-700 outline-none"
           onChange={handleChange}
-
-          style={inputStyle}
         />
 
         <input
           type="email"
           name="email"
           placeholder="Email Address"
-
+          className="p-4 rounded-xl bg-black/30 border border-gray-700 outline-none"
           onChange={handleChange}
-
-          style={inputStyle}
         />
 
         <input
-          type="password"
+          type={
+            showPassword
+              ? "text"
+              : "password"
+          }
           name="password"
           placeholder="Password"
-
+          className="p-4 rounded-xl bg-black/30 border border-gray-700 outline-none"
           onChange={handleChange}
+        />
 
-          style={inputStyle}
+        <input
+          type={
+            showPassword
+              ? "text"
+              : "password"
+          }
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          className="p-4 rounded-xl bg-black/30 border border-gray-700 outline-none"
+          onChange={handleChange}
         />
 
         <button
-          type="submit"
-
-          style={{
-            width: "100%",
-
-            padding: "16px",
-
-            borderRadius: "16px",
-
-            border: "none",
-
-            background:
-              "linear-gradient(to right, #8b5cf6, #3b82f6)",
-
-            color: "white",
-
-            fontSize: "17px",
-
-            fontWeight: "bold",
-
-            cursor: "pointer",
-
-            display: "flex",
-
-            justifyContent: "center",
-
-            alignItems: "center",
-
-            transition: "0.3s",
-
-            boxShadow:
-              "0 0 20px rgba(139,92,246,0.4)",
-          }}
+          type="button"
+          onClick={() =>
+            setShowPassword(
+              !showPassword
+            )
+          }
+          className="text-blue-400 text-left"
         >
-          Create Account
+          {showPassword
+            ? "Hide Password"
+            : "Show Password"}
         </button>
 
-        <p
-          style={{
-            marginTop: "25px",
+        <div className="bg-black/30 p-4 rounded-xl text-sm text-gray-300">
 
-            textAlign: "center",
+          Password must contain:
+          <ul className="list-disc ml-5 mt-2">
 
-            color: "#cbd5e1",
-          }}
+            <li>
+              Minimum 6 characters
+            </li>
+
+            <li>
+              One uppercase letter
+            </li>
+
+            <li>
+              One number
+            </li>
+
+            <li>
+              One special character
+            </li>
+
+          </ul>
+
+        </div>
+
+        <button
+          type="submit"
+          className="bg-gradient-to-r from-purple-500 to-blue-600 p-4 rounded-xl font-bold hover:scale-105 transition-all"
         >
-          Already have an account?{" "}
+          Register
+        </button>
+
+        <p className="text-center text-gray-300">
+
+          Already have an account?
 
           <Link
             to="/login"
-
-            style={{
-              color: "#8b5cf6",
-
-              textDecoration: "none",
-
-              fontWeight: "bold",
-            }}
+            className="text-blue-400 ml-2"
           >
             Login
           </Link>
@@ -204,29 +233,6 @@ function Register() {
 
     </div>
   );
-}
-
-const inputStyle = {
-
-  width: "100%",
-
-  padding: "16px",
-
-  marginBottom: "20px",
-
-  borderRadius: "14px",
-
-  border: "1px solid rgba(255,255,255,0.08)",
-
-  outline: "none",
-
-  fontSize: "15px",
-
-  background: "rgba(255,255,255,0.06)",
-
-  color: "white",
-
-  boxSizing: "border-box",
 };
 
 export default Register;

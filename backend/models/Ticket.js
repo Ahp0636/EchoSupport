@@ -1,16 +1,32 @@
 const mongoose = require("mongoose");
 
 const ticketSchema = new mongoose.Schema(
+
   {
-    userIssue: String,
+    userIssue: {
+      type: String,
+      required: true,
+    },
 
-    category: String,
+    category: {
+      type: String,
+      required: true,
+    },
 
-    priority: String,
+    priority: {
+      type: String,
+      required: true,
+    },
 
-    summary: String,
+    summary: {
+      type: String,
+      required: true,
+    },
 
-    solution: String,
+    solution: {
+      type: String,
+      default: "",
+    },
 
     status: {
       type: String,
@@ -27,9 +43,13 @@ const ticketSchema = new mongoose.Schema(
       default: 0,
     },
   },
+
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Ticket", ticketSchema);
+module.exports = mongoose.model(
+  "Ticket",
+  ticketSchema
+);

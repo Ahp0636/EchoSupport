@@ -3,14 +3,34 @@ const express = require("express");
 const router = express.Router();
 
 const {
+
+  createTicket,
+
   getTickets,
+
   updateTicketStatus,
+
+  deleteTicket,
+
   addFeedback,
-} = require("../controllers/ticketController");
+
+} = require(
+  "../controllers/ticketController"
+);
 
 
-// GET
-router.get("/", getTickets);
+// CREATE TICKET
+router.post(
+  "/create",
+  createTicket
+);
+
+
+// GET ALL TICKETS
+router.get(
+  "/",
+  getTickets
+);
 
 
 // UPDATE STATUS
@@ -20,10 +40,18 @@ router.put(
 );
 
 
+// DELETE TICKET
+router.delete(
+  "/:id",
+  deleteTicket
+);
+
+
 // FEEDBACK
 router.put(
   "/feedback/:id",
   addFeedback
 );
+
 
 module.exports = router;
