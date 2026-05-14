@@ -1,0 +1,226 @@
+import { useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+
+function Login() {
+
+  const navigate = useNavigate();
+
+  const [formData, setFormData] =
+    useState({
+      email: "",
+      password: "",
+    });
+
+  const handleChange = (e) => {
+
+    setFormData({
+      ...formData,
+      [e.target.name]:
+        e.target.value,
+    });
+  };
+
+  const handleLogin = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      const res = await axios.post(
+        "https://echosupport.onrender.com/api/auth/login",
+        formData
+      );
+
+      localStorage.setItem(
+        "token",
+        res.data.token
+      );
+
+      alert("Login Successful");
+
+      navigate("/dashboard");
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Login Failed");
+    }
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+
+        display: "flex",
+
+        justifyContent: "center",
+
+        alignItems: "center",
+
+        background:
+          "linear-gradient(to right top, #020617, #0f172a, #1e1b4b)",
+
+        fontFamily: "Arial",
+      }}
+    >
+
+      <form
+        onSubmit={handleLogin}
+
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+
+          background:
+            "rgba(255,255,255,0.08)",
+
+          backdropFilter: "blur(12px)",
+
+          padding: "40px",
+
+          borderRadius: "28px",
+
+          border:
+            "1px solid rgba(255,255,255,0.08)",
+
+          boxShadow:
+            "0 0 40px rgba(0,0,0,0.4)",
+        }}
+      >
+
+        <h1
+          style={{
+            textAlign: "center",
+
+            color: "white",
+
+            marginBottom: "35px",
+
+            fontSize: "42px",
+
+            fontWeight: "bold",
+
+            letterSpacing: "1px",
+          }}
+        >
+          Login
+        </h1>
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+
+          onChange={handleChange}
+
+          style={inputStyle}
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+
+          onChange={handleChange}
+
+          style={inputStyle}
+        />
+
+        <button
+          type="submit"
+
+          style={{
+            width: "100%",
+
+            padding: "16px",
+
+            borderRadius: "16px",
+
+            border: "none",
+
+            background:
+              "linear-gradient(to right, #8b5cf6, #3b82f6)",
+
+            color: "white",
+
+            fontSize: "17px",
+
+            fontWeight: "bold",
+
+            cursor: "pointer",
+
+            display: "flex",
+
+            justifyContent: "center",
+
+            alignItems: "center",
+
+            transition: "0.3s",
+
+            boxShadow:
+              "0 0 20px rgba(139,92,246,0.4)",
+          }}
+        >
+          Login
+        </button>
+
+        <p
+          style={{
+            marginTop: "25px",
+
+            textAlign: "center",
+
+            color: "#cbd5e1",
+          }}
+        >
+          Don’t have an account?{" "}
+
+          <Link
+            to="/"
+
+            style={{
+              color: "#8b5cf6",
+
+              textDecoration: "none",
+
+              fontWeight: "bold",
+            }}
+          >
+            Register
+          </Link>
+
+        </p>
+
+      </form>
+
+    </div>
+  );
+}
+
+const inputStyle = {
+
+  width: "100%",
+
+  padding: "16px",
+
+  marginBottom: "20px",
+
+  borderRadius: "14px",
+
+  border: "1px solid rgba(255,255,255,0.08)",
+
+  outline: "none",
+
+  fontSize: "15px",
+
+  background: "rgba(255,255,255,0.06)",
+
+  color: "white",
+
+  boxSizing: "border-box",
+};
+
+export default Login;
