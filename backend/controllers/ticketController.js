@@ -1,74 +1,107 @@
-const Ticket = require("../models/Ticket");
+const Ticket =
+  require("../models/Ticket");
 
 
-// CREATE TICKET
-const createTicket = async (
-  req,
-  res
-) => {
+// CREATE
+const createTicket =
+  async (req, res) => {
 
-  try {
+    try {
 
-    const {
-      userIssue,
-      category,
-      priority,
-      summary,
-    } = req.body;
-
-    const ticket =
-      await Ticket.create({
-
-        user: req.user?._id,
-
+      const {
         userIssue,
         category,
         priority,
         summary,
+      } = req.body;
+
+
+      const ticket =
+        await Ticket.create({
+
+          user:
+            req.user._id,
+
+          userIssue,
+
+          category,
+
+          priority,
+
+          summary,
+        });
+
+
+      res.status(201).json({
+
+        success: true,
+
+        ticket,
       });
 
-    res.status(201).json({
+    } catch (error) {
 
-      success: true,
-      ticket,
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
 
 
-// GET ALL TICKETS
-const getTickets = async (
-  req,
-  res
-) => {
+// USER TICKETS
+const getTickets =
+  async (req, res) => {
 
-  try {
+    try {
 
-    const tickets =
-      await Ticket.find()
-      .sort({
-        createdAt: -1,
+      let tickets;
+
+      if (
+        req.user.role ===
+        "admin"
+      ) {
+
+        tickets =
+          await Ticket.find()
+
+          .populate(
+            "user",
+            "name email"
+          )
+
+          .sort({
+            createdAt: -1,
+          });
+
+      } else {
+
+        tickets =
+          await Ticket.find({
+
+            user:
+              req.user._id,
+          })
+
+          .sort({
+            createdAt: -1,
+          });
+      }
+
+
+      res.status(200).json({
+
+        success: true,
+
+        tickets,
       });
 
-    res.status(200).json({
+    } catch (error) {
 
-      success: true,
-      tickets,
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
 
 
 // UPDATE STATUS
@@ -77,16 +110,14 @@ const updateTicketStatus =
 
     try {
 
-      const { status } =
-        req.body;
-
       const updatedTicket =
         await Ticket.findByIdAndUpdate(
 
           req.params.id,
 
           {
-            status,
+            status:
+              req.body.status,
           },
 
           {
@@ -97,6 +128,7 @@ const updateTicketStatus =
       res.status(200).json({
 
         success: true,
+
         updatedTicket,
       });
 
@@ -109,7 +141,7 @@ const updateTicketStatus =
   };
 
 
-// DELETE TICKET
+// DELETE
 const deleteTicket =
   async (req, res) => {
 
@@ -122,8 +154,9 @@ const deleteTicket =
       res.status(200).json({
 
         success: true,
+
         message:
-          "Ticket deleted successfully",
+          "Ticket deleted",
       });
 
     } catch (error) {
@@ -135,16 +168,11 @@ const deleteTicket =
   };
 
 
-// ADD FEEDBACK
+// FEEDBACK
 const addFeedback =
   async (req, res) => {
 
     try {
-
-      const {
-        feedback,
-        rating,
-      } = req.body;
 
       const updatedTicket =
         await Ticket.findByIdAndUpdate(
@@ -152,8 +180,11 @@ const addFeedback =
           req.params.id,
 
           {
-            feedback,
-            rating,
+            feedback:
+              req.body.feedback,
+
+            rating:
+              req.body.rating,
           },
 
           {
@@ -164,6 +195,7 @@ const addFeedback =
       res.status(200).json({
 
         success: true,
+
         updatedTicket,
       });
 

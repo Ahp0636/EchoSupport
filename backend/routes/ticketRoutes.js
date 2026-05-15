@@ -1,6 +1,13 @@
-const express = require("express");
+const express =
+  require("express");
 
-const router = express.Router();
+const router =
+  express.Router();
+
+const protect =
+  require(
+    "../middleware/authMiddleware"
+  );
 
 const {
 
@@ -19,39 +26,35 @@ const {
 );
 
 
-// CREATE TICKET
 router.post(
   "/create",
+  protect,
   createTicket
 );
 
-
-// GET ALL TICKETS
 router.get(
   "/",
+  protect,
   getTickets
 );
 
-
-// UPDATE STATUS
 router.put(
   "/:id",
+  protect,
   updateTicketStatus
 );
 
-
-// DELETE TICKET
 router.delete(
   "/:id",
+  protect,
   deleteTicket
 );
 
-
-// FEEDBACK
 router.put(
   "/feedback/:id",
+  protect,
   addFeedback
 );
 
-
-module.exports = router;
+module.exports =
+  router;
