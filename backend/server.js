@@ -1,9 +1,9 @@
 process.env.MONGODB_SKIP_SASLPREP = '1';
+const mongoose = require('mongoose'); // Your existing line
+
 require("dotenv").config();
 
 const express = require("express");
-
-const mongoose = require("mongoose");
 
 const cors = require("cors");
 
