@@ -8,7 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@mongodb-js/saslprep": "^1.1.0",
+    "@mongodb-js/saslprep": "^1.4.11",
     "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
