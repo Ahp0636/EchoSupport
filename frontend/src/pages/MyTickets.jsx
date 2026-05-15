@@ -1,6 +1,7 @@
 import DashboardLayout from "../layouts/DashboardLayout";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const MyTickets = () => {
 
@@ -12,7 +13,7 @@ const MyTickets = () => {
     try {
 
       const res = await axios.get(
-        "https://echo-support-backend.onrender.com/api/tickets"
+        `${API_BASE_URL}/api/tickets`
       );
 
       setTickets(res.data.tickets);

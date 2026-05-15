@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 import {
   useNavigate,
@@ -106,7 +107,7 @@ const Register = () => {
         const res =
           await axios.post(
 
-            "https://echo-support-backend.onrender.com/api/auth/register",
+            `${API_BASE_URL}/api/auth/register`,
 
             {
 

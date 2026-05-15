@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 import {
   useNavigate,
@@ -63,7 +64,7 @@ const Login = () => {
         const res =
           await axios.post(
 
-            "https://echo-support-backend.onrender.com/api/auth/login",
+            `${API_BASE_URL}/api/auth/login`,
 
             formData
           );

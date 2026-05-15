@@ -4,6 +4,7 @@ import {
 } from "react";
 
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 import {
   useNavigate,
@@ -24,7 +25,7 @@ const AdminDashboard = () => {
     try {
 
       const res = await axios.get(
-        "https://echo-support-backend.onrender.com/api/tickets"
+        `${API_BASE_URL}/api/tickets`
       );
 
       setTickets(res.data.tickets);
@@ -58,7 +59,7 @@ const AdminDashboard = () => {
 
       await axios.put(
 
-        `https://echo-support-backend.onrender.com/api/tickets/${id}`,
+        `${API_BASE_URL}/api/tickets/${id}`,
 
         { status }
       );
@@ -76,7 +77,7 @@ const AdminDashboard = () => {
     try {
 
       await axios.delete(
-        `https://echo-support-backend.onrender.com/api/tickets/${id}`
+        `${API_BASE_URL}/api/tickets/${id}`
       );
 
       fetchTickets();

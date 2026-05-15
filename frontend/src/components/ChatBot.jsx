@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function ChatBot() {
 
@@ -30,7 +31,7 @@ function ChatBot() {
     try {
 
       const res = await axios.post(
-        "https://echosupport.onrender.com/api/ai",
+        `${API_BASE_URL}/api/ai`,
         {
           issue: message,
         }

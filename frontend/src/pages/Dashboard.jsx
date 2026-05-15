@@ -1,6 +1,7 @@
 import ChatBot from "../components/ChatBot";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 function Dashboard() {
 
@@ -17,7 +18,7 @@ function Dashboard() {
     try {
 
       const res = await axios.get(
-        "https://echosupport.onrender.com/api/tickets"
+        `${API_BASE_URL}/api/tickets`
       );
 
       setTickets(res.data.tickets);
@@ -257,7 +258,7 @@ function Dashboard() {
                   try {
 
                     await axios.put(
-                      `https://echosupport.onrender.com/api/tickets/feedback/${ticket._id}`,
+                      `${API_BASE_URL}/api/tickets/feedback/${ticket._id}`,
                       {
                         feedback:
                           e.target.value,
@@ -310,7 +311,7 @@ function Dashboard() {
                     try {
 
                       await axios.put(
-                        `https://echosupport.onrender.com/api/tickets/${ticket._id}`,
+                        `${API_BASE_URL}/api/tickets/${ticket._id}`,
                         {
                           status:
                             e.target.value,

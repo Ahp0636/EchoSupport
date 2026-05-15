@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const CreateTicket = () => {
 
@@ -25,7 +26,7 @@ const CreateTicket = () => {
     try {
 
       const response = await axios.post(
-        "https://echo-support-backend.onrender.com/api/tickets/create",
+        `${API_BASE_URL}/api/tickets/create`,
         formData
       );
 
