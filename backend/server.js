@@ -1,3 +1,4 @@
+process.env.MONGODB_SKIP_SASLPREP = '1';
 require("dotenv").config();
 
 const express = require("express");
