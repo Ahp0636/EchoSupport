@@ -1,7 +1,7 @@
+require("dotenv").config();
 // 1. CRITICAL: This MUST be the first line to fix the Render error
 process.env.MONGODB_SKIP_SASLPREP = '1';
 
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
