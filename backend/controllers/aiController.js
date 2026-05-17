@@ -7,8 +7,48 @@ const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY,
 });
 
+const isGreetingOrSmallTalk = (issue) => {
+  const normalizedIssue = issue
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .trim();
+
+  const greetings = [
+    "hi",
+    "hii",
+    "hello",
+    "hey",
+    "hey there",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "thanks",
+    "thank you",
+    "ok",
+    "okay",
+  ];
+
+  return (
+    greetings.includes(normalizedIssue) ||
+    normalizedIssue.split(/\s+/).length <= 3 &&
+      /^(hi|hii|hello|hey|thanks|thank|ok|okay)/.test(normalizedIssue)
+  );
+};
+
 const buildLocalSupportResponse = (issue, previousChats = []) => {
   const normalizedIssue = issue.toLowerCase();
+
+  if (isGreetingOrSmallTalk(issue)) {
+    return {
+      category: "Greeting",
+      priority: "Low",
+      summary: issue,
+      solution:
+        "Hi! Please describe the exact issue you are facing, such as payment problem, login issue, phone lagging, delivery delay, account problem, battery issue, or network problem. I will suggest practical steps first, and if those steps do not solve it, I will guide you to create a ticket with the product and company details.",
+      shouldCreateTicket: false,
+    };
+  }
+
   const repeatedIssue = previousChats.some(
     (chat) => chat.userMessage.toLowerCase().trim() === normalizedIssue.trim()
   );
@@ -93,7 +133,10 @@ const generateAIResponse = async (req, res) => {
           messages: [
             {
               role: "system",
-              content: `You are an AI customer support assistant. Give practical, detailed, safe steps users can do themselves. Use chat history to avoid repeating the same wording. If the user cannot solve it, recommend creating a support ticket. Respond ONLY in valid JSON:
+              content: `You are an AI customer support assistant.
+                If the user only greets you, thanks you, or sends small talk, do not give troubleshooting steps. Greet them and ask them to describe the issue.
+                If the user describes a real problem, give practical, detailed, safe steps they can do themselves. Use chat history to avoid repeating the same wording. If the user cannot solve it, recommend creating a support ticket.
+                Respond ONLY in valid JSON:
                 {
                   "category": "string",
                   "priority": "Low/Medium/High",
