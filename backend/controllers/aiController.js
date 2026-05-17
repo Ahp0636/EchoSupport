@@ -123,7 +123,7 @@ const generateAIResponse = async (req, res) => {
       return res.status(400).json({ success: false, message: "Issue content is required" });
     }
 
-    const previousChats = await Chat.find({ user: req.user._id }).sort({ createdAt: 1 }).limit(12);
+    const previousChats = await Chat.find({ user: req.user._id }).sort({ createdAt: -1 }).limit(12);
     let parsedResponse = buildLocalSupportResponse(issue, previousChats);
 
     if (client.apiKey) {
@@ -145,7 +145,7 @@ const generateAIResponse = async (req, res) => {
                   "shouldCreateTicket": true/false
                 }`
             },
-            ...previousChats.flatMap((chat) => [
+            ...[...previousChats].reverse().flatMap((chat) => [
               { role: "user", content: chat.userMessage },
               { role: "assistant", content: chat.aiMessage },
             ]),
@@ -187,7 +187,7 @@ const generateAIResponse = async (req, res) => {
 
 const getChatHistory = async (req, res) => {
   try {
-    const chats = await Chat.find({ user: req.user._id }).sort({ createdAt: 1 });
+    const chats = await Chat.find({ user: req.user._id }).sort({ createdAt: -1 });
     res.status(200).json({ success: true, chats });
   } catch (error) {
     console.error("Get Chat History Error:", error.message);
