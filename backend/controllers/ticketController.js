@@ -13,6 +13,9 @@ const createTicket =
         category,
         priority,
         summary,
+        companyName,
+        companyEmail,
+        productName,
       } = req.body;
 
 
@@ -29,6 +32,12 @@ const createTicket =
           priority,
 
           summary,
+
+          companyName,
+
+          companyEmail,
+
+          productName,
         });
 
 
@@ -66,7 +75,7 @@ const getTickets =
 
           .populate(
             "user",
-            "name email"
+            "name email role"
           )
 
           .sort({
@@ -81,6 +90,11 @@ const getTickets =
             user:
               req.user._id,
           })
+
+          .populate(
+            "user",
+            "name email"
+          )
 
           .sort({
             createdAt: -1,
@@ -110,6 +124,24 @@ const updateTicketStatus =
 
     try {
 
+      const allowedStatuses = [
+        "Pending",
+        "In Progress",
+        "Completed Successfully",
+        "Solved",
+      ];
+
+      if (
+        !allowedStatuses.includes(
+          req.body.status
+        )
+      ) {
+        return res.status(400).json({
+          message:
+            "Invalid ticket status",
+        });
+      }
+
       const updatedTicket =
         await Ticket.findByIdAndUpdate(
 
@@ -123,6 +155,9 @@ const updateTicketStatus =
           {
             new: true,
           }
+        ).populate(
+          "user",
+          "name email role"
         );
 
       res.status(200).json({

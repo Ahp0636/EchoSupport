@@ -34,6 +34,21 @@ const ticketSchema =
         required: true,
       },
 
+      companyName: {
+        type: String,
+        default: "",
+      },
+
+      companyEmail: {
+        type: String,
+        default: "",
+      },
+
+      productName: {
+        type: String,
+        default: "",
+      },
+
       solution: {
         type: String,
         default: "",

@@ -1,6 +1,9 @@
 import DashboardLayout from "../layouts/DashboardLayout";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
+
+  const navigate = useNavigate();
 
   const user = JSON.parse(
     localStorage.getItem("user")
@@ -24,7 +27,11 @@ const UserDashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
 
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-3xl shadow-2xl">
+          <button
+            type="button"
+            onClick={() => navigate("/create-ticket")}
+            className="text-left bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+          >
 
             <h2 className="text-2xl font-bold">
               Create Complaint
@@ -34,9 +41,13 @@ const UserDashboard = () => {
               Submit support request
             </p>
 
-          </div>
+          </button>
 
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-8 rounded-3xl shadow-2xl">
+          <button
+            type="button"
+            onClick={() => navigate("/my-tickets")}
+            className="text-left bg-gradient-to-r from-green-600 to-emerald-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+          >
 
             <h2 className="text-2xl font-bold">
               Track Tickets
@@ -46,9 +57,13 @@ const UserDashboard = () => {
               Monitor issue progress
             </p>
 
-          </div>
+          </button>
 
-          <div className="bg-gradient-to-r from-pink-600 to-rose-600 p-8 rounded-3xl shadow-2xl">
+          <button
+            type="button"
+            onClick={() => navigate("/ai-chat")}
+            className="text-left bg-gradient-to-r from-pink-600 to-rose-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+          >
 
             <h2 className="text-2xl font-bold">
               AI Support
@@ -58,7 +73,7 @@ const UserDashboard = () => {
               Get smart assistance
             </p>
 
-          </div>
+          </button>
 
         </div>
 
