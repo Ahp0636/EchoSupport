@@ -28,10 +28,21 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/auth", authRoutes);
 
-app.get("/", (req, res) => {
-  res.send("EchoSupport AI Backend Running...");
-});
+const path = require("path");
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(
+      path.resolve(__dirname, "../", "frontend", "dist", "index.html")
+    )
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("EchoSupport AI Backend Running...");
+  });
+}
 const connectDB = async () => {
   if (!process.env.MONGO_URI) {
     console.error("MONGO_URI is missing. Set it in backend/.env or hosting env vars.");

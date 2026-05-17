@@ -5,6 +5,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 
 import "./index.css";
+import axios from "axios";
+
+// Add global axios interceptor
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = token;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 
 ReactDOM.createRoot(

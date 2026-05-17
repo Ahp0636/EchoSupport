@@ -1,4 +1,4 @@
-const Ticket = require("../models/Ticket");
+const Chat = require("../models/Chat");
 const OpenAI = require("openai");
 
 // Initialize OpenAI with OpenRouter settings
@@ -33,13 +33,11 @@ const generateAIResponse = async (req, res) => {
           content: issue,
         },
       ],
-      // This helps newer models strictly return JSON
       response_format: { type: "json_object" } 
     });
 
     const aiText = completion.choices[0].message.content;
 
-    // Safety check for parsing JSON
     let parsedResponse;
     try {
       parsedResponse = JSON.parse(aiText);
@@ -48,19 +46,17 @@ const generateAIResponse = async (req, res) => {
       return res.status(500).json({ success: false, message: "AI returned invalid format" });
     }
 
-    // SAVE TICKET TO DATABASE
-    const newTicket = await Ticket.create({
-      userIssue: issue,
-      category: parsedResponse.category || "General",
-      priority: parsedResponse.priority || "Low",
-      summary: parsedResponse.summary || "No summary provided",
-      solution: parsedResponse.solution || "Our team will look into this.",
+    // SAVE CHAT HISTORY TO DATABASE INSTEAD OF TICKET
+    const newChat = await Chat.create({
+      user: req.user._id,
+      userMessage: issue,
+      aiMessage: parsedResponse.solution || "Our team will look into this.",
     });
 
     res.status(200).json({
       success: true,
       aiResponse: parsedResponse,
-      ticket: newTicket,
+      chat: newChat,
     });
 
   } catch (error) {
@@ -73,4 +69,14 @@ const generateAIResponse = async (req, res) => {
   }
 };
 
-module.exports = { generateAIResponse };
+const getChatHistory = async (req, res) => {
+  try {
+    const chats = await Chat.find({ user: req.user._id }).sort({ createdAt: 1 });
+    res.status(200).json({ success: true, chats });
+  } catch (error) {
+    console.error("Get Chat History Error:", error.message);
+    res.status(500).json({ success: false, message: "Failed to fetch chat history", error: error.message });
+  }
+};
+
+module.exports = { generateAIResponse, getChatHistory };

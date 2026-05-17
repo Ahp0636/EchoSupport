@@ -1,20 +1,41 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import API_BASE_URL from "../config/api";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 const AIChat = () => {
 
-  const [message, setMessage] =
-    useState("");
+  const [message, setMessage] = useState("");
 
-  const [chat, setChat] =
-    useState([
-      {
-        sender: "ai",
-        text:
-          "Hello 👋 I am your AI Support Assistant. Describe your issue.",
-      },
-    ]);
+  const [chat, setChat] = useState([
+    {
+      sender: "ai",
+      text: "Hello 👋 I am your AI Support Assistant. Describe your issue.",
+    },
+  ]);
+
+  const fetchHistory = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/ai/history`);
+      if (res.data.chats && res.data.chats.length > 0) {
+        const history = [{
+          sender: "ai",
+          text: "Hello 👋 I am your AI Support Assistant. Describe your issue.",
+        }];
+        res.data.chats.forEach((c) => {
+          history.push({ sender: "user", text: c.userMessage });
+          history.push({ sender: "ai", text: c.aiMessage });
+        });
+        setChat(history);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
 
   const sendMessage = async () => {
 
@@ -25,51 +46,30 @@ const AIChat = () => {
       text: message,
     };
 
-    let aiText =
-      "We are analyzing your issue. Please try restarting the system and checking your network connection.";
-
-    if (
-      message.toLowerCase().includes(
-        "payment"
-      )
-    ) {
-
-      aiText =
-        "Payment issues are usually caused by failed gateway verification. Please verify transaction ID and retry.";
-    }
-
-    if (
-      message.toLowerCase().includes(
-        "login"
-      )
-    ) {
-
-      aiText =
-        "Please reset your password and ensure your email is verified.";
-    }
-
-    if (
-      message.toLowerCase().includes(
-        "network"
-      )
-    ) {
-
-      aiText =
-        "Please restart your router and check internet connectivity.";
-    }
-
-    const aiReply = {
-      sender: "ai",
-      text: aiText,
-    };
-
-    setChat((prev) => [
-      ...prev,
-      userMessage,
-      aiReply,
-    ]);
-
+    setChat((prev) => [...prev, userMessage]);
+    
+    const currentMessage = message;
     setMessage("");
+
+    try {
+      const res = await axios.post(`${API_BASE_URL}/api/ai`, {
+        issue: currentMessage,
+      });
+
+      const aiReply = {
+        sender: "ai",
+        text: res.data.chat.aiMessage,
+      };
+
+      setChat((prev) => [...prev, aiReply]);
+    } catch (error) {
+      console.log(error);
+      const errorReply = {
+        sender: "ai",
+        text: "Sorry, I am having trouble connecting to the server.",
+      };
+      setChat((prev) => [...prev, errorReply]);
+    }
   };
 
   return (

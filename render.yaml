@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: echosupport
+    env: node
+    plan: free
+    buildCommand: npm run install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: VITE_API_BASE_URL
+        value: "" # Leave empty in production so it hits the same origin
