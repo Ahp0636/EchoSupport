@@ -37,19 +37,19 @@ const DashboardLayout = ({
 
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-black text-white flex">
 
-      <div className="w-[280px] bg-black/40 backdrop-blur-xl border-r border-gray-800 p-6 flex flex-col justify-between shadow-2xl">
+      <div className="w-[320px] shrink-0 bg-black/40 backdrop-blur-xl border-r border-gray-800 px-7 py-6 flex flex-col justify-between shadow-2xl">
 
         <div>
 
           <div className="mb-10">
 
-            <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <h1 className="text-[2.35rem] leading-tight font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent whitespace-nowrap">
 
               EchoSupport
 
             </h1>
 
-            <p className="text-gray-400 mt-2 text-sm">
+            <p className="text-gray-400 mt-2 text-[0.95rem] leading-relaxed">
               AI Powered Support Platform
             </p>
 
@@ -178,7 +178,7 @@ const DashboardLayout = ({
 
       </div>
 
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-10 overflow-y-auto">
 
         {children}
 

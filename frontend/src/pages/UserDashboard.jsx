@@ -13,7 +13,7 @@ const UserDashboard = () => {
 
     <DashboardLayout>
 
-      <div>
+      <div className="max-w-3xl">
 
         <h1 className="text-5xl font-bold text-white">
           Welcome,
@@ -25,12 +25,12 @@ const UserDashboard = () => {
           AI Powered Customer Support Dashboard
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div className="flex flex-col gap-5 mt-10">
 
           <button
             type="button"
             onClick={() => navigate("/create-ticket")}
-            className="text-left bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+            className="w-full text-left bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-3xl shadow-2xl hover:translate-x-1 hover:scale-[1.01] transition-all"
           >
 
             <h2 className="text-2xl font-bold">
@@ -46,7 +46,7 @@ const UserDashboard = () => {
           <button
             type="button"
             onClick={() => navigate("/my-tickets")}
-            className="text-left bg-gradient-to-r from-green-600 to-emerald-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+            className="w-full text-left bg-gradient-to-r from-green-600 to-emerald-600 p-8 rounded-3xl shadow-2xl hover:translate-x-1 hover:scale-[1.01] transition-all"
           >
 
             <h2 className="text-2xl font-bold">
@@ -62,7 +62,7 @@ const UserDashboard = () => {
           <button
             type="button"
             onClick={() => navigate("/ai-chat")}
-            className="text-left bg-gradient-to-r from-pink-600 to-rose-600 p-8 rounded-3xl shadow-2xl hover:scale-[1.02] transition-all"
+            className="w-full text-left bg-gradient-to-r from-pink-600 to-rose-600 p-8 rounded-3xl shadow-2xl hover:translate-x-1 hover:scale-[1.01] transition-all"
           >
 
             <h2 className="text-2xl font-bold">
