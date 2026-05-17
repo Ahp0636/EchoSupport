@@ -7,6 +7,22 @@ const jwt =
 const bcrypt =
   require("bcryptjs");
 
+const getUserRole = (email) => {
+
+  const adminEmails =
+    (process.env.ADMIN_EMAILS || "")
+      .split(",")
+      .map((adminEmail) =>
+        adminEmail.trim().toLowerCase()
+      )
+      .filter(Boolean);
+
+  return adminEmails.includes(
+    email.toLowerCase()
+  )
+    ? "admin"
+    : "user";
+};
 
 const registerUser =
   async (req, res) => {
@@ -40,6 +56,8 @@ const registerUser =
           10
         );
 
+      const role =
+        getUserRole(email);
 
       const user =
         await User.create({
@@ -51,7 +69,7 @@ const registerUser =
           password:
             hashedPassword,
 
-          role: "user",
+          role,
         });
 
 
@@ -127,6 +145,18 @@ const loginUser =
         });
       }
 
+      const expectedRole =
+        getUserRole(email);
+
+      if (
+        expectedRole === "admin" &&
+        user.role !== "admin"
+      ) {
+
+        user.role = "admin";
+
+        await user.save();
+      }
 
       const token =
         jwt.sign(
