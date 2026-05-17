@@ -15,6 +15,8 @@ const createTicket =
         summary,
         companyName,
         companyEmail,
+        companyPhone,
+        companyWhatsApp,
         productName,
       } = req.body;
 
@@ -36,6 +38,10 @@ const createTicket =
           companyName,
 
           companyEmail,
+
+          companyPhone,
+
+          companyWhatsApp,
 
           productName,
         });
@@ -243,6 +249,73 @@ const addFeedback =
   };
 
 
+const addEscalationUpdate =
+  async (req, res) => {
+
+    try {
+
+      const {
+        note,
+        status,
+      } = req.body;
+
+      if (
+        !note ||
+        !note.trim()
+      ) {
+
+        return res.status(400).json({
+          message:
+            "Escalation note is required",
+        });
+      }
+
+      const updatedTicket =
+        await Ticket.findByIdAndUpdate(
+
+          req.params.id,
+
+          {
+            $push: {
+              escalationUpdates: {
+                note:
+                  note.trim(),
+
+                status:
+                  status ||
+                  "Company Follow-up",
+
+                addedBy:
+                  req.user?.name ||
+                  "Admin",
+              },
+            },
+          },
+
+          {
+            new: true,
+          }
+        ).populate(
+          "user",
+          "name email role"
+        );
+
+      res.status(200).json({
+
+        success: true,
+
+        updatedTicket,
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+
+
 module.exports = {
 
   createTicket,
@@ -254,4 +327,6 @@ module.exports = {
   deleteTicket,
 
   addFeedback,
+
+  addEscalationUpdate,
 };

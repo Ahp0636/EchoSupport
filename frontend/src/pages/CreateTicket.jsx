@@ -24,6 +24,8 @@ const CreateTicket = () => {
     productName: "",
     companyName: "",
     companyEmail: "",
+    companyPhone: "",
+    companyWhatsApp: "",
   });
 
   const handleChange = (e) => {
@@ -139,6 +141,26 @@ const CreateTicket = () => {
             onChange={handleChange}
             className="p-4 rounded-2xl bg-blue-950/60 text-white outline-none border border-blue-800 focus:border-cyan-400"
           />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input
+              type="tel"
+              name="companyPhone"
+              placeholder="Company phone (optional)"
+              value={formData.companyPhone}
+              onChange={handleChange}
+              className="p-4 rounded-2xl bg-blue-950/60 text-white outline-none border border-blue-800 focus:border-cyan-400"
+            />
+
+            <input
+              type="tel"
+              name="companyWhatsApp"
+              placeholder="Company WhatsApp (optional)"
+              value={formData.companyWhatsApp}
+              onChange={handleChange}
+              className="p-4 rounded-2xl bg-blue-950/60 text-white outline-none border border-blue-800 focus:border-cyan-400"
+            />
+          </div>
 
           <select
             name="priority"

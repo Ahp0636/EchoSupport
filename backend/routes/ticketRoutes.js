@@ -21,6 +21,8 @@ const {
 
   addFeedback,
 
+  addEscalationUpdate,
+
 } = require(
   "../controllers/ticketController"
 );
@@ -54,6 +56,12 @@ router.put(
   "/feedback/:id",
   protect,
   addFeedback
+);
+
+router.put(
+  "/escalation/:id",
+  protect,
+  addEscalationUpdate
 );
 
 module.exports =

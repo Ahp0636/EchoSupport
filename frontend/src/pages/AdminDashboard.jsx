@@ -7,6 +7,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [search, setSearch] = useState("");
+  const [escalationDrafts, setEscalationDrafts] = useState({});
 
   const fetchTickets = async () => {
     try {
@@ -45,6 +46,34 @@ const AdminDashboard = () => {
     }
   };
 
+  const normalizePhone = (phone) =>
+    (phone || "").replace(/[^\d+]/g, "");
+
+  const addEscalationUpdate = async (id) => {
+    const note = escalationDrafts[id];
+
+    if (!note || !note.trim()) {
+      return alert("Please write an escalation update first.");
+    }
+
+    try {
+      await axios.put(`${API_BASE_URL}/api/tickets/escalation/${id}`, {
+        note,
+        status: "Company Follow-up",
+      });
+
+      setEscalationDrafts({
+        ...escalationDrafts,
+        [id]: "",
+      });
+
+      fetchTickets();
+    } catch (error) {
+      console.log(error);
+      alert("Could not save escalation update");
+    }
+  };
+
   const filteredTickets = tickets.filter((ticket) => {
     const searchText = [
       ticket.userIssue,
@@ -52,6 +81,8 @@ const AdminDashboard = () => {
       ticket.category,
       ticket.companyName,
       ticket.productName,
+      ticket.companyPhone,
+      ticket.companyWhatsApp,
       ticket.user?.name,
       ticket.user?.email,
     ]
@@ -170,12 +201,77 @@ const AdminDashboard = () => {
                   <p>Product: {ticket.productName || "Not provided"}</p>
                   <p>Company: {ticket.companyName || "Not provided"}</p>
                   <p>Company email: {ticket.companyEmail || "Not provided"}</p>
+                  <p>Company phone: {ticket.companyPhone || "Not provided"}</p>
+                  <p>Company WhatsApp: {ticket.companyWhatsApp || "Not provided"}</p>
                 </div>
               </div>
 
               <span className="bg-blue-500 px-4 py-2 rounded-full">
                 {ticket.priority}
               </span>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-gray-800 bg-black/30 p-4">
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <h3 className="text-lg font-bold">
+                  Company Escalation Timeline
+                </h3>
+
+                <span className="text-sm text-gray-400">
+                  {ticket.escalationUpdates?.length || 0} updates
+                </span>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-3">
+                {ticket.escalationUpdates?.length ? (
+                  ticket.escalationUpdates.map((update, index) => (
+                    <div
+                      key={`${ticket._id}-${index}`}
+                      className="border-l-4 border-cyan-500 bg-gray-950/80 px-4 py-3 rounded-r-xl"
+                    >
+                      <div className="flex justify-between gap-3 flex-wrap text-sm text-gray-400">
+                        <span>{update.status}</span>
+                        <span>
+                          {update.createdAt
+                            ? new Date(update.createdAt).toLocaleString()
+                            : ""}
+                        </span>
+                      </div>
+
+                      <p className="mt-2 text-gray-100">
+                        {update.note}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No company follow-up added yet.
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-4 flex gap-3 flex-col md:flex-row">
+                <input
+                  type="text"
+                  placeholder="Add company follow-up note..."
+                  value={escalationDrafts[ticket._id] || ""}
+                  onChange={(e) =>
+                    setEscalationDrafts({
+                      ...escalationDrafts,
+                      [ticket._id]: e.target.value,
+                    })
+                  }
+                  className="flex-1 rounded-xl bg-gray-950 border border-gray-700 px-4 py-3 outline-none focus:border-cyan-500"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => addEscalationUpdate(ticket._id)}
+                  className="rounded-xl bg-cyan-600 px-5 py-3 font-semibold hover:bg-cyan-500"
+                >
+                  Add Update
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-between items-center mt-6 flex-wrap gap-4">
@@ -194,6 +290,26 @@ const AdminDashboard = () => {
               </div>
 
               <div className="flex gap-3 flex-wrap">
+                {ticket.companyPhone && (
+                  <a
+                    href={`tel:${normalizePhone(ticket.companyPhone)}`}
+                    className="bg-emerald-600 px-4 py-2 rounded-xl"
+                  >
+                    Call Company
+                  </a>
+                )}
+
+                {ticket.companyWhatsApp && (
+                  <a
+                    href={`https://wa.me/${normalizePhone(ticket.companyWhatsApp).replace("+", "")}?text=${encodeURIComponent(`Hello ${ticket.companyName || "Support Team"}, a customer is facing this issue: ${ticket.summary}`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-green-600 px-4 py-2 rounded-xl"
+                  >
+                    WhatsApp Company
+                  </a>
+                )}
+
                 {ticket.companyEmail && (
                   <a
                     href={`mailto:${ticket.companyEmail}?subject=Customer issue: ${encodeURIComponent(ticket.userIssue)}&body=${encodeURIComponent(`Hello ${ticket.companyName || "Support Team"},\n\nA customer is facing this issue:\n${ticket.summary}\n\nCustomer: ${ticket.user?.name || "Unknown"}\nTicket status: ${ticket.status}\n\nPlease check and share the next steps.`)}`}

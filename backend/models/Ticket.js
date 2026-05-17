@@ -44,6 +44,16 @@ const ticketSchema =
         default: "",
       },
 
+      companyPhone: {
+        type: String,
+        default: "",
+      },
+
+      companyWhatsApp: {
+        type: String,
+        default: "",
+      },
+
       productName: {
         type: String,
         default: "",
@@ -68,6 +78,30 @@ const ticketSchema =
         type: Number,
         default: 0,
       },
+
+      escalationUpdates: [
+        {
+          note: {
+            type: String,
+            required: true,
+          },
+
+          status: {
+            type: String,
+            default: "Company Follow-up",
+          },
+
+          addedBy: {
+            type: String,
+            default: "Admin",
+          },
+
+          createdAt: {
+            type: Date,
+            default: Date.now,
+          },
+        },
+      ],
     },
 
     {

@@ -63,6 +63,8 @@ const MyTickets = () => {
                   <p>Category: {ticket.category}</p>
                   <p>Product: {ticket.productName || "Not provided"}</p>
                   <p>Company: {ticket.companyName || "Not provided"}</p>
+                  <p>Company phone: {ticket.companyPhone || "Not provided"}</p>
+                  <p>Company WhatsApp: {ticket.companyWhatsApp || "Not provided"}</p>
                 </div>
 
                 <span className="bg-green-600 px-4 py-1 rounded-full">
