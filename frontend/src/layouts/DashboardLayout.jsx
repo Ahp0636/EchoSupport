@@ -147,19 +147,19 @@ const DashboardLayout = ({
 
         </div>
 
-        <div>
+        <div className="mt-8 border-t border-gray-800/80 pt-6">
 
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 mb-5">
+          <div className="bg-gray-900/80 border border-gray-800 rounded-2xl px-5 py-5 mb-6 shadow-lg">
 
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-400 mb-2">
               Logged in as
             </p>
 
-            <h2 className="text-lg font-bold mt-1">
+            <h2 className="text-xl font-bold leading-tight">
               {user?.name}
             </h2>
 
-            <span className="inline-block mt-3 bg-blue-600 px-4 py-1 rounded-full text-sm uppercase">
+            <span className="inline-block mt-4 bg-blue-600 px-5 py-1.5 rounded-full text-sm uppercase tracking-wide">
 
               {user?.role}
 
@@ -169,7 +169,7 @@ const DashboardLayout = ({
 
           <button
             onClick={logoutHandler}
-            className="w-full bg-gradient-to-r from-red-600 to-pink-600 p-4 rounded-2xl font-bold hover:scale-105 transition-all duration-300"
+            className="w-full bg-gradient-to-r from-red-600 to-pink-600 p-4 rounded-2xl font-bold hover:scale-[1.02] transition-all duration-300"
           >
             Logout
           </button>
